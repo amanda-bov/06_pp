@@ -10,7 +10,7 @@ CAIXA, BNB, BASA, Finep) e a distribuição regional no triênio 2023–2025.
 |-------|-----------|
 | Equipe | Equipe de Política Industrial |
 | Responsável | Amanda |
-| E-mail | responsavel@cgid.gov.br |
+| E-mail | sdic.dados@mdic.gov.br |
 | Linguagem | Python 3.10+ |
 
 ## Fonte de Dados
@@ -57,7 +57,7 @@ quarto render 07_pmp.qmd         # versão standalone (HTML + docx)
 │   └── pmp_financiamento.py     # Orquestrador do pipeline
 └── data/                        # Gitignored — criado pelo pipeline
     ├── financiamento_consolidado/
-    │   ├── PlanoMaisProducao_Atualizado.xlsx   ← coloque aqui
+    │   ├── PlanoMaisProducao_Atualizado.xlsx   ← Oscar
     │   ├── pmp_consolidado.parquet
     │   ├── pmp_tabela_resumo.parquet
     │   └── pmp_kpis_triplo.parquet
