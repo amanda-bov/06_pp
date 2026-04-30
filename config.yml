@@ -1,0 +1,86 @@
+# ─────────────────────────────────────────────────────────────────
+# Configurações da Seção 07 — PMP (Plano Mais Produção)
+# ─────────────────────────────────────────────────────────────────
+
+secao:
+  numero: "07"
+  nome: "PMP"
+  titulo_completo: "Plano Mais Produção"
+  responsavel: "Equipe de Política Industrial"
+  contato: "responsavel@cgid.gov.br"
+
+# Recorte temporal
+periodo:
+  ano_inicial: 2023
+  ano_final: 2025
+  anos_analise: [2023, 2024, 2025]
+
+# Fontes de dados
+fontes_dados:
+  xlsx:
+    financiamento: "data/financiamento_consolidado/PlanoMaisProducao_Atualizado.xlsx"
+    cache_horas: 24
+  csv_bruto:
+    financiamento: "data/financiamento_consolidado/fFinanciamentoPublico.csv"
+    nichos: "data/financiamento_consolidado/dNichos.csv"
+  separador: ";"
+  encoding: "utf-8"
+
+# Missões PMP
+missoes:
+  - id: 1
+    nome: "Agroindustrial"
+    cor: "#2E7D32"
+  - id: 2
+    nome: "Saúde"
+    cor: "#1565C0"
+  - id: 3
+    nome: "Infraestrutura"
+    cor: "#E65100"
+  - id: 4
+    nome: "Transformação Digital"
+    cor: "#6A1B9A"
+  - id: 5
+    nome: "Descarbonização e bioeconomia"
+    cor: "#00838F"
+  - id: 6
+    nome: "Defesa"
+    cor: "#424242"
+
+# Fontes de recurso
+fontes_recurso:
+  BNDES: "#0E5A91"
+  BB:    "#F9A825"
+  BNB:   "#C62828"
+  BASA:  "#2E7D32"
+  CAIXA: "#0277BD"
+  Finep: "#6A1B9A"
+
+# Regiões e UFs
+regioes:
+  Norte: ["AC", "AM", "AP", "PA", "RO", "RR", "TO"]
+  Nordeste: ["AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE"]
+  "Centro-Oeste": ["DF", "GO", "MS", "MT"]
+  Sudeste: ["ES", "MG", "RJ", "SP"]
+  Sul: ["PR", "RS", "SC"]
+
+# Configurações de visualização
+visualizacao:
+  fig_width: 11
+  fig_height: 6
+  dpi: 150
+  formato_saida:
+    - "png"
+    - "svg"
+  paleta_anos:
+    "2023": "#90CAF9"
+    "2024": "#1976D2"
+    "2025": "#0D47A1"
+  estilo: "seaborn-v0_8-whitegrid"
+  font_family: "sans-serif"
+  font_size: 10
+
+# Saídas
+output:
+  graficos: "output/graficos"
+  tabelas: "output/tabelas"

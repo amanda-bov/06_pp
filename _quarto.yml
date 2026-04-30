@@ -1,0 +1,8 @@
+project:
+  type: default
+  execute-dir: project
+
+execute:
+  echo: false
+  warning: false
+  message: false

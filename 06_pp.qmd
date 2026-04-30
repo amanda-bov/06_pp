@@ -1,0 +1,261 @@
+---
+title: "Seção 06 — Plano Mais Produção"
+subtitle: "Análise da Evolução dos Investimentos no Triênio 2023–2025"
+author: "Equipe de Política Industrial"
+date: today
+lang: pt-BR
+jupyter: python3
+format:
+  html:
+    theme: brand
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    code-summary: "Ver código"
+    embed-resources: true
+    fig-width: 11
+    fig-height: 6
+    fig-dpi: 150
+  docx:
+    toc: true
+    number-sections: true
+execute:
+  warning: false
+  echo: false
+  freeze: false
+---
+
+<!--
+  IMPORTANTE: este documento NÃO executa o pipeline de dados.
+  Os parquets em data/ devem ser gerados antes com:
+      python -m src.pmp_financiamento
+
+  Depois renderize:
+      quarto render 06_pp.qmd
+-->
+
+```{python}
+#| label: setup
+#| include: false
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from pathlib import Path
+import sys
+
+sys.path.insert(0, ".")
+
+from src.visualizacao import (
+    grafico_evolucao_total,
+    grafico_evolucao_missao,
+    grafico_evolucao_fonte,
+    grafico_evolucao_regiao,
+    grafico_evolucao_uf,
+    heatmap_uf_missao,
+    grafico_share_missao,
+    grafico_variacao_missao,
+    adicionar_nota_rodape,
+    NOTA_EXCLUSAO_BB,
+)
+
+DATA = Path("data")
+
+consolidado   = pd.read_parquet(DATA / "financiamento_consolidado" / "pmp_consolidado.parquet")
+missoes       = pd.read_parquet(DATA / "missoes"                   / "pmp_missoes.parquet")
+fontes        = pd.read_parquet(DATA / "fontes"                    / "pmp_fontes.parquet")
+ufs           = pd.read_parquet(DATA / "regional"                  / "pmp_ufs.parquet")
+uf_missao     = pd.read_parquet(DATA / "regional"                  / "pmp_uf_missao.parquet")
+regioes       = pd.read_parquet(DATA / "regional"                  / "pmp_regioes.parquet")
+tabela_resumo = pd.read_parquet(DATA / "financiamento_consolidado" / "pmp_tabela_resumo.parquet")
+kpis_triplo   = pd.read_parquet(DATA / "financiamento_consolidado" / "pmp_kpis_triplo.parquet")
+```
+
+# Sumário Executivo
+
+O **Plano Mais Produção (PMP)** é o programa federal de fomento à indústria
+brasileira, estruturado em torno de seis missões estratégicas e operado por
+seis fontes de financiamento (BNDES, Banco do Brasil, CAIXA, BNB, BASA e Finep).
+Esta seção apresenta a análise da execução do PMP no **triênio 2023–2025**.
+
+```{python}
+#| label: kpis
+
+consolidado_sorted = consolidado.sort_values("ano")
+print(f"Investimento total 2023:   R$ {consolidado_sorted.iloc[0]['valor_total']/1e9:>6.1f} bi")
+print(f"Investimento total 2024:   R$ {consolidado_sorted.iloc[1]['valor_total']/1e9:>6.1f} bi")
+print(f"Investimento total 2025:   R$ {consolidado_sorted.iloc[2]['valor_total']/1e9:>6.1f} bi")
+print()
+total_bi   = kpis_triplo.iloc[0]["valor_total_bi"]
+n_projetos = int(kpis_triplo.iloc[0]["total_projetos"])
+n_empresas = int(kpis_triplo.iloc[0]["total_empresas"])
+print(f"Total acumulado triênio:   R$ {total_bi:>6.1f} bi")
+print(f"Total de projetos:         {n_projetos:>12,d}".replace(",", "."))
+print(f"Empresas beneficiadas:     {n_empresas:>12,d}".replace(",", "."))
+```
+
+::: {.callout-note}
+Nos gráficos por UF, foram excluídos **R$ 87,4 bi** do Banco do Brasil
+(operações sem desagregação geográfica no painel original).
+:::
+
+---
+
+# Evolução do Investimento Total
+
+```{python}
+#| label: fig-evolucao-total
+#| fig-cap: "Evolução do investimento PMP no triênio 2023–2025"
+
+fig = grafico_evolucao_total(consolidado)
+plt.show()
+```
+
+---
+
+# Evolução por Missão Estratégica
+
+```{python}
+#| label: fig-evolucao-missao
+#| fig-cap: "Investimento PMP por Missão (2023–2025)"
+
+fig = grafico_evolucao_missao(missoes)
+plt.show()
+```
+
+## Participação relativa de cada missão
+
+```{python}
+#| label: fig-share-missao
+#| fig-cap: "Participação % de cada missão no total anual"
+
+fig = grafico_share_missao(missoes)
+plt.show()
+```
+
+## Variação 2024 → 2025
+
+```{python}
+#| label: fig-variacao
+#| fig-cap: "Aceleração ou desaceleração do investimento por missão"
+
+fig = grafico_variacao_missao(missoes, ano_referencia=2025)
+plt.show()
+```
+
+---
+
+# Composição por Fonte de Recurso
+
+```{python}
+#| label: fig-fonte
+#| fig-cap: "Composição do investimento por banco público"
+
+fig = grafico_evolucao_fonte(fontes)
+plt.show()
+```
+
+---
+
+# Distribuição Regional
+
+::: {.callout-note}
+Os gráficos a seguir excluem operações sem UF identificada (Banco do Brasil,
+**R$ 87,4 bi** no triênio), conforme apontado nas notas de rodapé.
+:::
+
+## Evolução por Região
+
+```{python}
+#| label: fig-regiao
+#| fig-cap: "Evolução do PMP por região (2023–2025)"
+
+fig = grafico_evolucao_regiao(regioes, marcar_titulo=True)
+adicionar_nota_rodape(fig, NOTA_EXCLUSAO_BB)
+plt.show()
+```
+
+## Top 10 UFs
+
+```{python}
+#| label: fig-uf
+#| fig-cap: "Top 10 UFs — evolução do investimento triênio"
+
+fig = grafico_evolucao_uf(ufs, n_top=10, marcar_titulo=True)
+adicionar_nota_rodape(fig, NOTA_EXCLUSAO_BB)
+plt.show()
+```
+
+## Concentração UF × Missão
+
+```{python}
+#| label: fig-heatmap-uf-missao
+#| fig-cap: "Concentração do PMP por UF e Missão (acumulado)"
+#| fig-height: 9
+
+fig = heatmap_uf_missao(uf_missao, marcar_titulo=True)
+adicionar_nota_rodape(fig, NOTA_EXCLUSAO_BB)
+plt.show()
+```
+
+---
+
+# Tabela-resumo
+
+```{python}
+#| label: tbl-resumo
+
+def fmt(x):
+    return f"R$ {x:,.2f} bi".replace(",", "X").replace(".", ",").replace("X", ".")
+
+tab_fmt = tabela_resumo.copy()
+for col in tab_fmt.columns:
+    if col != "missao":
+        tab_fmt[col] = tab_fmt[col].apply(fmt)
+
+from IPython.display import HTML, display
+display(HTML(f"""
+<div>
+  <h4>Investimento por Missão — Triênio 2023–2025</h4>
+  {tab_fmt.to_html(index=False, border=0, classes="table table-striped")}
+</div>
+"""))
+```
+
+---
+
+# Notas Metodológicas
+
+::: {.callout-note}
+## Sobre os dados
+
+Os dados são extraídos do **Painel do Plano Mais Produção** publicado pelo MDIC
+em formato Excel (.xlsx) com 4 abas pré-agregadas: UF × Ano, Fonte × Ano,
+Missão × Ano e UF × Missão × Ano. O painel é atualizado periodicamente pelo
+MDIC com dados consolidados das agências de fomento.
+:::
+
+::: {.callout-warning}
+## Tratamento da sigla "NV"
+
+A sigla "NV" corresponde a operações do Banco do Brasil sem desagregação
+geográfica (crédito rural consolidado nacional). Para análises por UF/Região,
+esses valores (**R$ 87,4 bi** no triênio) foram excluídos. As análises por
+missão e por fonte preservam os valores totais.
+:::
+
+::: {.callout-tip}
+## Reprodutibilidade
+
+```bash
+pip install -r requirements.txt
+
+# Colocar o xlsx do MDIC em:
+#   data/financiamento_consolidado/PlanoMaisProducao_Atualizado.xlsx
+
+python -m src.pmp_financiamento   # gera parquets em data/
+quarto render 06_pp.qmd
+```
+:::

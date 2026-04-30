@@ -1,0 +1,33 @@
+# ──────────────────────────────────────────────────────────────────
+# Seção 07 — PMP — Plano Mais Produção
+# Dependências para rodar o pipeline + renderizar o Quarto
+# ──────────────────────────────────────────────────────────────────
+#
+# Instalação:
+#   pip install -r requirements.txt
+#
+# Python necessário: 3.10 ou superior
+
+# ── Manipulação de dados ──────────────────────────────────────────
+pandas>=2.0.0,<3.0.0
+numpy>=1.24.0,<3.0.0
+pyarrow>=12.0.0          # leitura/escrita de parquets
+openpyxl>=3.1.0          # leitura do xlsx do MDIC
+
+# ── Configuração ──────────────────────────────────────────────────
+pyyaml>=6.0              # leitura do config.yml
+
+# ── Visualização ──────────────────────────────────────────────────
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# ── Quarto (renderização do 07_pmp.qmd) ───────────────────────────
+jupyter>=1.0.0
+ipykernel>=6.20.0
+ipython>=8.10.0
+nbformat>=5.7.0
+nbclient>=0.7.0
+
+# ── Opcional: extração legacy do .pbix ────────────────────────────
+# Descomente se for trabalhar com a fonte CSV bruta via pbix:
+# pbixray>=0.4.0

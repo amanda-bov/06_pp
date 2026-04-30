@@ -1,0 +1,28 @@
+# Quarto
+.quarto/
+**/*_cache/
+**/*_files/
+_book/
+
+# Dados (raw, cache, processados)
+data/
+
+# R
+.Rhistory
+.Rdata
+*.rds
+
+# Arrow / Parquet
+**/*.parquet
+
+# PDF / LaTeX
+*.pdf
+*.tex
+*.aux
+*.log
+*.out
+*.synctex.gz
+
+# Windows
+*:Zone.Identifier
+.DS_Store
