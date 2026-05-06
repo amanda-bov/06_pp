@@ -1,33 +1,57 @@
-# ──────────────────────────────────────────────────────────────────
-# Seção 07 — PMP — Plano Mais Produção
-# Dependências para rodar o pipeline + renderizar o Quarto
-# ──────────────────────────────────────────────────────────────────
-#
-# Instalação:
-#   pip install -r requirements.txt
-#
-# Python necessário: 3.10 ou superior
+# Dependências do Projeto Relatório CGID
+# Instale com: pip install -r requirements.txt
 
-# ── Manipulação de dados ──────────────────────────────────────────
-pandas>=2.0.0,<3.0.0
-numpy>=1.24.0,<3.0.0
-pyarrow>=12.0.0          # leitura/escrita de parquets
-openpyxl>=3.1.0          # leitura do xlsx do MDIC
+# ============================================================================
+# CORE - Análise de dados e manipulação
+# ============================================================================
+pandas>=2.2.0          # DataFrames e manipulação de dados
+numpy>=1.26.0          # Computação numérica
 
-# ── Configuração ──────────────────────────────────────────────────
-pyyaml>=6.0              # leitura do config.yml
+# ============================================================================
+# VISUALIZAÇÃO - Gráficos e dashboards
+# ============================================================================
+matplotlib>=3.8.0      # Biblioteca base para visualizações
+seaborn>=0.13.0        # Visualizações estatísticas elegantes
 
-# ── Visualização ──────────────────────────────────────────────────
-matplotlib>=3.7.0
-seaborn>=0.12.0
+# ============================================================================
+# ANÁLISE ECONÔMICA - Estatística e econometria (OPCIONAIS)
+# ============================================================================
+statsmodels>=0.14.0    # Modelos estatísticos e econométricos
 
-# ── Quarto (renderização do 07_pmp.qmd) ───────────────────────────
-jupyter>=1.0.0
-ipykernel>=6.20.0
-ipython>=8.10.0
-nbformat>=5.7.0
-nbclient>=0.7.0
+scikit-learn>=1.4.0    # Machine learning e análise preditiva
+plotly>=5.17.0         # Gráficos interativos para web
+cairosvg>=2.7.0        # Conversão de SVG para PNG (necessário para PDF rendering)
+yfinance>=0.2.0        # Dados financeiros do Yahoo Finance
+fredapi>=0.4.3         # API do Federal Reserve Economic Data (FRED)
 
-# ── Opcional: extração legacy do .pbix ────────────────────────────
-# Descomente se for trabalhar com a fonte CSV bruta via pbix:
-# pbixray>=0.4.0
+# ============================================================================
+# DADOS E APIS
+# ============================================================================
+requests>=2.31.0       # Requisições HTTP para APIs
+sidrapy>=0.1.4         # Cliente da API SIDRA/IBGE (seção 05 — PIB)
+
+# ============================================================================
+# PROCESSAMENTO DE TEXTO - Relatórios e documentos
+# ============================================================================
+python-docx>=1.1.0     # Geração de documentos Word (reference.docx)
+openpyxl>=3.1.0        # Leitura/escrita de arquivos .xlsx (usado pelo pandas e pelo pipeline PMP)
+
+# ============================================================================
+# EXECUÇÃO INTERATIVA - Quarto e notebooks
+# ============================================================================
+
+IPython>=8.39.0        # Renderização interativa e utilitários como IPython.display.HTML
+ipykernel>=6.29.0      # Kernel Python para execução de células no Quarto
+jupyter-cache>=1.0.0   # Cache para execução de notebooks Jupyter/Quarto
+
+# ============================================================================
+# CONFIGURAÇÃO - YAML
+# ============================================================================
+pyyaml>=6.0            # Leitura de _brand.yml e _variables.yml
+
+# ============================================================================
+# BIBLIOTECAS ESPECÍFICAS DO PROJETO
+# ============================================================================
+#Bibliotecas a serem instaladas via ssh qnd forem para produção
+git+ssh://git@github.com/amiltonmendes/sdic_libraries.git#subdirectory=python
+#git+https://github.com/amiltonmendes/sdic_libraries.git#subdirectory=python
